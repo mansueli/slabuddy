@@ -1,4 +1,4 @@
-# [<img alt="SLA-buddy mascot" src="https://github.com/mansueli/slabuddy/assets/5036432/a7754c4d-535e-453d-8075-c1f7d33ceef0" width="73" />]() SLA-Buddy
+# [<img alt="SLA-buddy mascot" src="https://github.com/mansueli/slabuddy/assets/5036432/b2d06907-ca89-4f4b-86eb-798cb6dfa8bd" width="73" />]() SLA-Buddy
 
 ## SLA Buddy: a helpful robot to help you meet Service Level Agreement in Slack.
 
@@ -23,6 +23,7 @@ Here's the top-level diagram explaining how it works:
 
 - It monitors for new tickets in a few slack channels. For example, you could set different priorities depending on the Tier/Plan of your customer.
 - If there is no message after an `X` amount of time, then it will post on the channels to alert people working in support.
+
 - You can respond in the thread with a `@mention` to the bot, so they will know you acknowledged the ticket and will delay future comms in 30 min. 
 
 ## Installing
