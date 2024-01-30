@@ -4,7 +4,6 @@ SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
@@ -127,7 +126,7 @@ BEGIN
     RAISE NOTICE 'Calling create_ticket_array()';
     _ticket_array := public.create_ticket_array();
 
-    -- Check if _ticket_array is '[]'
+    -- Check IF _ticket_array is '[]'
     IF _ticket_array = '[]' THEN
         RAISE NOTICE 'No tickets to process. Exiting function...';
         -- Release the advisory lock
@@ -139,7 +138,7 @@ BEGIN
     RAISE NOTICE 'Calling help_plataform_wrapper()';
     _response := public.help_plataform_wrapper(_ticket_array);
 
-    -- Check if _response is NULL
+    -- Check IF _response is NULL
     IF _response IS NULL THEN
         RAISE NOTICE 'Response is NULL. Exiting function...';
         -- Release the advisory lock
@@ -211,7 +210,7 @@ BEGIN
         SELECT * FROM public.checking_tasks_queue 
         WHERE due_time <= NOW() AND replied IS FALSE
     LOOP
-        -- Add the ticket_id to the array if it's not already there
+        -- Add the ticket_id to the array IF it's not already there
         IF NOT (_task.payload->>'ticket_id') = ANY(_unique_ticket_ids) THEN
             _unique_ticket_ids := _unique_ticket_ids || (_task.payload->>'ticket_id');
             _payload_array := _payload_array || jsonb_build_object('ticket_id', _task.payload->>'ticket_id', 'timestamp', EXTRACT(EPOCH FROM _task.created_at)::BIGINT)::JSONB;
@@ -223,7 +222,7 @@ BEGIN
         IF i != 1 THEN
             _result := _result || ',';
         END IF;
-        
+
         _result := _result || _payload_array[i]::text;
     END LOOP;
 
@@ -232,7 +231,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION "public"."check_horsey_mention_reply_log"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."check_mention_reply_log"() RETURNS "trigger"
     LANGUAGE "plpgsql"
     AS $$
 DECLARE
@@ -247,7 +246,7 @@ BEGIN
     
     SELECT EXISTS (
         SELECT 1 
-        FROM horsey_mention_reply_log 
+        FROM mention_reply_log 
         WHERE channel = _channel AND thread_ts = _thread_ts
     ) INTO exists;
 
@@ -271,11 +270,11 @@ BEGIN
   -- Execute the function text to create the function
   EXECUTE function_text;
 
-  -- Extract function name from function text
+  -- Extract function name FROM function text
   SELECT (regexp_matches(function_text, 'create (or replace )?function (public\.)?(\w+)', 'i'))[3]
   INTO function_name;
 
-  -- Get function details from the system catalog
+  -- Get function details FROM the system catalog
   SELECT pg_get_function_result(p.oid), 
                 pg_get_function_arguments(p.oid), p.prosrc, l.lanname
   INTO return_type, argument_types, function_source, lang_settings
@@ -311,14 +310,14 @@ BEGIN
         SELECT * FROM public.checking_tasks_queue 
         WHERE due_time <= NOW() AND replied IS FALSE
     LOOP
-        -- Add the ticket_id to the array if it's not already there
+        -- Add the ticket_id to the array IF it's not already there
         IF NOT (_task.payload->>'ticket_id') = ANY(_unique_ticket_ids) THEN
             _unique_ticket_ids := _unique_ticket_ids || (_task.payload->>'ticket_id');
             _payload_array := _payload_array || jsonb_build_object('ticket_id', _task.payload->>'ticket_id', 'timestamp', EXTRACT(EPOCH FROM _task.created_at)::BIGINT)::JSONB;
         END IF;
     END LOOP;
 
-    -- Check if _payload_array is empty
+    -- Check IF _payload_array is empty
     IF array_length(_payload_array, 1) IS NULL THEN
         _result := '[]';
         RETURN _result;
@@ -344,9 +343,9 @@ BEGIN
   -- If the ts timestamp is older than 24 hours
   IF (NEW.ts < NOW() - INTERVAL '12 hours') THEN
     -- Raise an exception
-    RAISE EXCEPTION 'Cannot insert a row with a ts timestamp older than 24 hours.';
+    RAISE EXCEPTION 'Cannot INSERT a row with a ts timestamp older than 24 hours.';
   END IF;
-  -- If the ts timestamp is not older than 24 hours, continue with the insert operation
+  -- If the ts timestamp is not older than 24 hours, continue with the INSERT operation
   RETURN NEW;
 END;
 $$;
@@ -372,7 +371,7 @@ BEGIN
   FROM vault.decrypted_secrets
   WHERE name = 'calendar_base_url';
   api_url := base_url || '&timeMin=' || time_min || '&timeMax=' || time_max;
-  select "content"::jsonb into response from http_get(api_url);
+  SELECT "content"::jsonb INTO response FROM http_get(api_url);
   events := response->'items';
   SELECT ARRAY_AGG(event->>'summary')
   INTO current_event_names
@@ -404,14 +403,14 @@ BEGIN
   
   api_url := base_url || '&timeMin=' || time_min || '&timeMax=' || time_max;
   
-  select "content"::jsonb into response from http_get(api_url);
+  SELECT "content"::jsonb INTO response FROM http_get(api_url);
   events := response->'items'; -- Remove the typecast to ::jsonb
-  
+
   SELECT ARRAY_AGG(event->>'summary')
   INTO embedded_event_names
   FROM jsonb_array_elements(events) AS event -- Use jsonb_array_elements function
   WHERE (event->>'summary') ILIKE '%embedded%';
-  
+
   RETURN COALESCE(to_jsonb(embedded_event_names)::text,'[]');
 END;
 $$;
@@ -491,10 +490,10 @@ BEGIN
            url_address,
            ARRAY[http_header('Authorization', full_bearer), http_header('Content-Type', 'application/json')],
            'application/json',
-           coalesce(post_data, '') -- Set content to an empty string if post_data is NULL
+           coalesce(post_data, '') -- Set content to an empty string IF post_data is NULL
         )::http_request);
 
-  -- Raise an exception if the response content is NULL
+  -- Raise an exception IF the response content is NULL
   IF response.content IS NULL THEN
     RAISE EXCEPTION 'Error: Edge Function returned NULL content. Status: %', response.status;
   END IF;
@@ -514,7 +513,7 @@ DECLARE
   full_bearer TEXT;
   response RECORD;
 BEGIN
-  -- Get secrets from Vault
+  -- Get secrets FROM Vault
   SELECT decrypted_secret
   INTO api_key
   FROM vault.decrypted_secrets
@@ -534,10 +533,10 @@ BEGIN
            url_address,
            ARRAY[http_header('Authorization', full_bearer)],
            'application/json',
-           coalesce(payload::text, '') -- Set content to an empty string if post_data is NULL
+           coalesce(payload::text, '') -- Set content to an empty string IF post_data is NULL
         )::http_request);
 
-  -- Raise an exception if the response content is NULL
+  -- Raise an exception IF the response content is NULL
   IF response.content IS NULL THEN
     RAISE EXCEPTION 'Error: Edge Function returned NULL content. Status: %', response.status;
   END IF;
@@ -556,7 +555,7 @@ DECLARE
   row_count integer;
   edge_function_url text;
 BEGIN
-    -- Create JSON from channel & ts arguments
+    -- Create JSON FROM channel & ts arguments
     _payload := jsonb_build_object('channel', channel, 'thread_ts', thread_ts, 'ts', ts);
     -- Get the bearer
     SELECT decrypted_secret
@@ -571,9 +570,9 @@ BEGIN
     WHERE name = 'mention_reply_edge_function_url';
     full_bearer := 'Bearer ' || api_key;
 
-    -- Try to insert a row into the unlogged table
+    -- Try to INSERT a row into the unlogged table
     BEGIN
-        INSERT INTO horsey_mention_reply_log (channel, thread_ts, ts) VALUES (channel, thread_ts, ts);
+        INSERT INTO mention_reply_log (channel, thread_ts, ts) VALUES (channel, thread_ts, ts);
         GET DIAGNOSTICS row_count = ROW_COUNT;
     EXCEPTION WHEN unique_violation THEN
         -- If there is a unique violation error, do nothing and set row_count to 0
@@ -600,25 +599,24 @@ declare
     escalationtimeintervals int[];
     currentinterval int;
     threadts text;
-begin
-    -- check for enterprise channel_id
-    if new.channel_id = 'C054UF2522E' then
+
+BEGIN
+    IF new.channel_id <> '' THEN
+        SELECT escalation_time INTO escalationtimeintervals FROM priority WHERE channel_id = new.channel_id;
+    ELSE
         escalationtimeintervals := array[10, 20, 35, 50]; -- minutes
-    else
-        -- update escalationtimeintervals for yc / teams interval
-        escalationtimeintervals := array[60, 180, 360, 720]; -- minutes
-    end if;
-    -- insert tasks for each escalation level
-    for i in 1..4
-    loop
+    END IF;
+    -- INSERT tasks for each escalation level
+    FOR i IN 1..4
+    LOOP
         -- set the current escalation time interval
         currentinterval := escalationtimeintervals[i];
         -- format thread_ts as (epoch time as a big int) + '.' + ts_ms
-        threadts := extract(epoch from new.ts)::bigint::text || '.' || new.ts_ms;
+        threadts := extract(epoch FROM new.ts)::bigint::text || '.' || new.ts_ms;
 
-        -- check if ticket_type is not 'feedback'
-        if lower(new.ticket_type) <> 'feedback' then
-            insert into checking_tasks_queue (http_verb, payload, due_time, replied)
+        -- check IF ticket_type is not 'feedback'
+        IF lower(new.ticket_type) <> 'feedback' THEN
+            INSERT INTO checking_tasks_queue (http_verb, payload, due_time, replied)
             values (
                 'POST',
                 jsonb_build_object(
@@ -632,11 +630,11 @@ begin
                 new.ts + (currentinterval * interval '1 minute'),
                 false
             );
-        end if;
-    end loop;
+        END IF;
+    END LOOP;
     -- return the new slack_msg row
     return new;
-end;
+END;
 $$;
 
 CREATE OR REPLACE FUNCTION "public"."process_channels"() RETURNS "text"
@@ -701,7 +699,7 @@ CREATE OR REPLACE FUNCTION "public"."rollback_function"("func_name" "text", "sch
 DECLARE
   function_text text;
 BEGIN
-  -- Get the most recent function version from the function_history table
+  -- Get the most recent function version FROM the function_history table
   SELECT source_code
   INTO function_text
   FROM archive.function_history
@@ -714,7 +712,7 @@ BEGIN
     RAISE EXCEPTION 'No previous version of function % found.', func_name;
   END IF;
 
-  -- Add 'or replace' to the function text if it's not already there (case-insensitive search and replace)
+  -- Add 'or replace' to the function text IF it's not already there (case-insensitive search and replace)
   IF NOT function_text ~* 'or replace' THEN
     function_text := regexp_replace(function_text, 'create function', 'create or replace function', 'i');
   END IF;
@@ -738,7 +736,7 @@ CREATE OR REPLACE FUNCTION "public"."scan_channel"("channel_id" "text") RETURNS 
     channel_payload text;
     url_address text;
  BEGIN
- -- Get the API key from the vault
+ -- Get the API key FROM the vault
   SELECT decrypted_secret
   INTO service_role
   FROM vault.decrypted_secrets
@@ -763,7 +761,7 @@ CREATE OR REPLACE FUNCTION "public"."slack_post_wrapper"("payload" "jsonb") RETU
        full_bearer TEXT;
        response RECORD;
      BEGIN
-       -- Get secrets from Vault
+       -- Get secrets FROM Vault
        SELECT decrypted_secret
        INTO api_key
        FROM vault.decrypted_secrets
@@ -784,7 +782,7 @@ CREATE OR REPLACE FUNCTION "public"."slack_post_wrapper"("payload" "jsonb") RETU
                   url_address,
                   ARRAY[http_header('Authorization', full_bearer), http_header('Content-Type', 'application/json')],
                   'application/json',
-                  coalesce(payload::text, '') -- Set content to an empty string if post_data is NULL
+                  coalesce(payload::text, '') -- Set content to an empty string IF post_data is NULL
                )::http_request);
        EXCEPTION
          WHEN others THEN
@@ -792,7 +790,7 @@ CREATE OR REPLACE FUNCTION "public"."slack_post_wrapper"("payload" "jsonb") RETU
            response := ('error', '{}'::jsonb);
        END;
      
-       -- Raise an exception if the response content is NULL
+       -- Raise an exception IF the response content is NULL
        IF response.content IS NULL THEN
          RAISE EXCEPTION 'Error: Edge Function returned NULL content. Status: %', response.status;
        END IF;
@@ -868,14 +866,14 @@ CREATE TABLE IF NOT EXISTS "public"."destination_channels" (
 
 ALTER TABLE "public"."destination_channels" OWNER TO "postgres";
 
-CREATE UNLOGGED TABLE "public"."horsey_mention_reply_log" (
+CREATE UNLOGGED TABLE "public"."mention_reply_log" (
     "channel" "text" NOT NULL,
     "thread_ts" "text" NOT NULL,
     "ts" "text" NOT NULL,
     "created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE "public"."horsey_mention_reply_log" OWNER TO "postgres";
+ALTER TABLE "public"."mention_reply_log" OWNER TO "postgres";
 
 CREATE OR REPLACE VIEW "public"."lock_monitor" AS
  SELECT COALESCE((("blockingl"."relation")::"regclass")::"text", "blockingl"."locktype") AS "locked_item",
@@ -916,6 +914,7 @@ ALTER TABLE "public"."post_to_slack_log" ALTER COLUMN "id" ADD GENERATED BY DEFA
 CREATE TABLE IF NOT EXISTS "public"."priority" (
     "id" integer NOT NULL,
     "level" "text" NOT NULL,
+    "channel_id" "text" NOT NULL,
     "message" "text" NOT NULL
 );
 
@@ -930,7 +929,8 @@ CREATE TABLE IF NOT EXISTS "public"."slack_channels" (
     "dest_channel_id" "text",
     "private" bigint DEFAULT '0'::bigint NOT NULL,
     "expiration_date" timestamp with time zone,
-    "is_alert_channel" boolean DEFAULT true NOT NULL
+    "is_alert_channel" boolean DEFAULT true NOT NULL,
+    "escalation_time" INTEGER[] DEFAULT '{10, 20, 35, 50}'::INTEGER[] NOT NULL,
 );
 
 ALTER TABLE "public"."slack_channels" OWNER TO "postgres";
@@ -1003,8 +1003,8 @@ ALTER TABLE ONLY "public"."checking_tasks_queue"
 ALTER TABLE ONLY "public"."destination_channels"
     ADD CONSTRAINT "destination_channels_pkey" PRIMARY KEY ("channel_id");
 
-ALTER TABLE ONLY "public"."horsey_mention_reply_log"
-    ADD CONSTRAINT "horsey_mention_reply_log_pkey" PRIMARY KEY ("channel", "thread_ts", "ts");
+ALTER TABLE ONLY "public"."mention_reply_log"
+    ADD CONSTRAINT "mention_reply_log_pkey" PRIMARY KEY ("channel", "thread_ts", "ts");
 
 ALTER TABLE ONLY "public"."post_to_slack_log"
     ADD CONSTRAINT "pk_post_to_slack_log" PRIMARY KEY ("ticket_id", "escalation_level");
@@ -1029,9 +1029,9 @@ ALTER TABLE ONLY "secrets"."worker_status"
 
 CREATE INDEX "support_agents_fts" ON "public"."support_agents" USING "gin" ("fts");
 
-CREATE OR REPLACE TRIGGER "before_insert_function_history" BEFORE INSERT ON "archive"."function_history" FOR EACH ROW EXECUTE FUNCTION "public"."calculate_version"();
+CREATE OR REPLACE TRIGGER "before_INSERT_function_history" BEFORE INSERT ON "archive"."function_history" FOR EACH ROW EXECUTE FUNCTION "public"."calculate_version"();
 
-CREATE OR REPLACE TRIGGER "before_insert_checking_tasks_queue" BEFORE INSERT ON "public"."checking_tasks_queue" FOR EACH ROW EXECUTE FUNCTION "public"."check_horsey_mention_reply_log"();
+CREATE OR REPLACE TRIGGER "before_INSERT_checking_tasks_queue" BEFORE INSERT ON "public"."checking_tasks_queue" FOR EACH ROW EXECUTE FUNCTION "public"."check_mention_reply_log"();
 
 CREATE OR REPLACE TRIGGER "check_ts_trigger" BEFORE INSERT ON "public"."slack_msg" FOR EACH ROW EXECUTE FUNCTION "public"."exclude_old_messages"();
 
@@ -1046,7 +1046,7 @@ ALTER TABLE "public"."checking_tasks_queue" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."destination_channels" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."horsey_mention_reply_log" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."mention_reply_log" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."post_to_slack_log" ENABLE ROW LEVEL SECURITY;
 
@@ -1078,9 +1078,9 @@ GRANT ALL ON FUNCTION "public"."check_due_tasks_and_update_debug"() TO "anon";
 GRANT ALL ON FUNCTION "public"."check_due_tasks_and_update_debug"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."check_due_tasks_and_update_debug"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."check_horsey_mention_reply_log"() TO "anon";
-GRANT ALL ON FUNCTION "public"."check_horsey_mention_reply_log"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."check_horsey_mention_reply_log"() TO "service_role";
+GRANT ALL ON FUNCTION "public"."check_mention_reply_log"() TO "anon";
+GRANT ALL ON FUNCTION "public"."check_mention_reply_log"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."check_mention_reply_log"() TO "service_role";
 
 REVOKE ALL ON FUNCTION "public"."create_function_from_source"("function_text" "text", "schema_name" "text") FROM PUBLIC;
 GRANT ALL ON FUNCTION "public"."create_function_from_source"("function_text" "text", "schema_name" "text") TO "service_role";
@@ -1170,9 +1170,9 @@ GRANT ALL ON TABLE "public"."destination_channels" TO "anon";
 GRANT ALL ON TABLE "public"."destination_channels" TO "authenticated";
 GRANT ALL ON TABLE "public"."destination_channels" TO "service_role";
 
-GRANT ALL ON TABLE "public"."horsey_mention_reply_log" TO "anon";
-GRANT ALL ON TABLE "public"."horsey_mention_reply_log" TO "authenticated";
-GRANT ALL ON TABLE "public"."horsey_mention_reply_log" TO "service_role";
+GRANT ALL ON TABLE "public"."mention_reply_log" TO "anon";
+GRANT ALL ON TABLE "public"."mention_reply_log" TO "authenticated";
+GRANT ALL ON TABLE "public"."mention_reply_log" TO "service_role";
 
 GRANT ALL ON TABLE "public"."lock_monitor" TO "anon";
 GRANT ALL ON TABLE "public"."lock_monitor" TO "authenticated";
