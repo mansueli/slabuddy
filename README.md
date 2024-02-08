@@ -16,11 +16,11 @@ This bot started as an internal tooling project to help enforce and meet SLAs at
  
 | Currently supported  | Includes Edge Function? | Has setup guide? |
 | -------------------- | ----------------------- |----------------- |
-| Zendesk              | Yes                     | No               |
+| Zendesk              | Yes                     | Yes              |
 | Freshdesk            | Yes                     | Yes              |
 
 > [!NOTE]  
-> 1. We encorage contributions to include other Help/Support platforms.
+> 1. We encourage contributions to include other Help/Support platforms.
 
 ## How it works:
 
