@@ -904,11 +904,7 @@ CREATE TABLE IF NOT EXISTS "public"."slack_channels" (
     "id" bigint NOT NULL,
     "channel" "text",
     "channel_id" "text",
-    "p_level" "text",
-    "dest_channel" "text",
-    "dest_channel_id" "text",
     "private" bigint DEFAULT '0'::bigint NOT NULL,
-    "expiration_date" timestamp with time zone,
     "is_alert_channel" boolean DEFAULT true NOT NULL,
     "escalation_time" INTEGER[] DEFAULT '{10, 20, 35, 50}'::INTEGER[] NOT NULL
 );
@@ -1008,9 +1004,6 @@ CREATE OR REPLACE TRIGGER "before_insert_checking_tasks_queue" BEFORE INSERT ON 
 CREATE OR REPLACE TRIGGER "check_ts_trigger" BEFORE INSERT ON "public"."slack_msg" FOR EACH ROW EXECUTE FUNCTION "public"."exclude_old_messages"();
 
 CREATE OR REPLACE TRIGGER "insert_tasks_trigger" AFTER INSERT ON "public"."slack_msg" FOR EACH ROW EXECUTE FUNCTION "public"."insert_tasks"();
-
-ALTER TABLE ONLY "public"."slack_channels"
-    ADD CONSTRAINT "slack_channels_dest_channel_id_fkey" FOREIGN KEY ("dest_channel_id") REFERENCES "public"."destination_channels"("channel_id") ON DELETE SET NULL;
 
 ALTER TABLE "public"."checking_tasks_queue" ENABLE ROW LEVEL SECURITY;
 
