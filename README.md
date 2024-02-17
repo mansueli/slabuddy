@@ -25,7 +25,7 @@ This bot started as an internal tooling project to help enforce and meet SLAs at
 ## How it works:
 
 Here's the top-level diagram explaining how it works: 
-![slabuddy drawio](https://github.com/mansueli/slabuddy/assets/5036432/adf2c343-e978-46cb-9d9b-d4ea0bbff54d)
+![slabuddy drawio](https://github.com/mansueli/slabuddy/assets/5036432/44c35c61-9120-4e82-adf4-2a984da7c87a)
 
 - It monitors for new tickets in a few slack channels. For example, you could set different priorities depending on the Tier/Plan of your customer.
 - If there is no message after an `X` amount of time, then it will post on the channels to alert people working in support.
@@ -38,4 +38,4 @@ Here's the top-level diagram explaining how it works:
 
 ## License
 
-This code is licensed under [Apache License 2.0](https://github.com/mansueli/slabuddy/blob/main/LICENSE). 
+This code is licensed under [Apache License 2.0](https://github.com/mansueli/slabuddy/blob/main/LICENSE).
