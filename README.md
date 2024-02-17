@@ -1,4 +1,4 @@
-# [<img alt="SLA-buddy mascot" src="https://github.com/mansueli/slabuddy/assets/5036432/b2d06907-ca89-4f4b-86eb-798cb6dfa8bd" width="73" />]() SLA-Buddy
+# [<img alt="SLA-buddy mascot" src="https://github.com/mansueli/slabuddy/assets/5036432/b2d06907-ca89-4f4b-86eb-798cb6dfa8bd" width="73" />]() SLA Buddy
 
 ## SLA Buddy: a helpful robot to help you meet Service Level Agreement in Slack.
 
