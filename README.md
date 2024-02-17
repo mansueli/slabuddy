@@ -34,8 +34,90 @@ Here's the top-level diagram explaining how it works:
 
 ## Installing
 
+### Get a Supabase Project
+ - Setup a Supabase project for the bot [here](database.new)
+ - Install the [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started#installing-the-supabase-cli)
+ - Login to your Supabase instance in the CLI
+ - Run the [initial.sql](https://raw.githubusercontent.com/mansueli/slabuddy/main/supabase/migrations/initial.sql) in the database.
+ - Deploy the Supabase Edge Functions (Pick the one for your help platform or edit if your platform isn't supported yet)
+
+   
+### Integrate Help Platform with Slack
+
+It will depend on the integrations available but we recommend setting each slack channel for each level of Priority you have example: (Enterprise, Teams, Pro, Free). 
+This allows you to set different SLA enforcements on each of them.
+
+
+### Deploy Bot to Slack:
+
+*Use this manifest to create the bot:* 
+
+```manifest.yml
+{
+    "display_information": {
+        "name": "SLA Buddy",
+        "description": "Your helpful fren",
+        "background_color": "#4061c7"
+    },
+    "features": {
+        "bot_user": {
+            "display_name": "SLA Buddy",
+            "always_online": false
+        },
+        "slash_commands": [
+            {
+                "command": "/add-support-engineer",
+                "url": "https://sb.contoso.com/functions/v1/add-support-engineer/add",
+                "description": "adds an new support engineer to Horsey",
+                "usage_hint": "Just run it without arguments and use the modal",
+                "should_escape": false
+            }
+        ]
+    },
+    "oauth_config": {
+        "scopes": {
+            "bot": [
+                "app_mentions:read",
+                "channels:history",
+                "channels:join",
+                "channels:read",
+                "chat:write",
+                "links:write",
+                "commands",
+                "files:write",
+                "chat:write.public"
+            ]
+        }
+    },
+    "settings": {
+        "event_subscriptions": {
+            "request_url": "https://sb.contoso.com/functions/v1/horsey_mentions",
+            "bot_events": [
+                "app_mention"
+            ]
+        },
+        "interactivity": {
+            "is_enabled": true,
+            "request_url": "https://sb.contoso.com/functions/v1/add-support-engineer/modal"
+        },
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": false,
+        "token_rotation_enabled": false
+    }
+}
+```
+> [!NOTE]  
+> You'll need to edit the URLs being called according to your project URL on Supabase. 
+
+## Setting the secrets in Vault & Edge Functions:
+
+
+
 ## Configuration
 
-## License
+- Add Support engineers to the Bot using the `slash` command `/add-support-engineer`
+- Add @SLA Buddy to the channels that receive ticket information
+- Set the escalation levels & messages with `/sla-setup`
 
+## License
 This code is licensed under [Apache License 2.0](https://github.com/mansueli/slabuddy/blob/main/LICENSE).
