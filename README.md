@@ -52,7 +52,7 @@ This allows you to set different SLA enforcements on each of them.
 
 *Use this manifest to create the bot:* 
 
-```manifest.yml
+```manifest.json
 {
     "display_information": {
         "name": "Sla Buddy",
@@ -61,8 +61,8 @@ This allows you to set different SLA enforcements on each of them.
     },
     "features": {
         "bot_user": {
-            "display_name": "IntelliBot",
-            "always_online": false
+            "display_name": "Sla Buddy",
+            "always_online": true
         },
         "slash_commands": [
             {
