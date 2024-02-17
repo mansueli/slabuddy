@@ -11,10 +11,16 @@ This bot started as an internal tooling project to help enforce and meet SLAs at
    - Vault
    - Edge Functions
  - [<img alt="SLA-buddy mascot" src="https://github.com/mansueli/slabuddy/assets/5036432/4352ffe6-e61f-43e4-90af-ef97c79eeb86" width="20" />]() Slack API
- - Zendesk* 
+
+## Supported ticketing Platforms¹:
+ 
+| Currently supported  | Includes Edge Function? | Has setup guide? |
+| -------------------- | ----------------------- |----------------- |
+| Zendesk              | Yes                     | Yes              |
+| Freshdesk            | Yes                     | Yes              |
 
 > [!NOTE]  
-> *We encorage contributions to include other Help/Support platforms.
+> 1. We encourage contributions to include other Help/Support platforms.
 
 ## How it works:
 
