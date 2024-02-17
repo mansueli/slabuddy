@@ -39,7 +39,7 @@ Here's the top-level diagram explaining how it works:
  - Install the [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started#installing-the-supabase-cli)
  - Login to your Supabase instance in the CLI
  - Run the [initial.sql](https://raw.githubusercontent.com/mansueli/slabuddy/main/supabase/migrations/initial.sql) in the database.
- - Deploy the Supabase Edge Functions (Pick the one for your help platform or edit if your platform isn't supported yet)
+ - Deploy the Supabase Edge Functions with the option `--no-verify-jwt`
 
    
 ### Integrate Help Platform with Slack
@@ -55,23 +55,29 @@ This allows you to set different SLA enforcements on each of them.
 ```manifest.yml
 {
     "display_information": {
-        "name": "SLA Buddy",
+        "name": "Sla Buddy",
         "description": "Your helpful fren",
         "background_color": "#4061c7"
     },
     "features": {
         "bot_user": {
-            "display_name": "SLA Buddy",
+            "display_name": "IntelliBot",
             "always_online": false
         },
         "slash_commands": [
             {
                 "command": "/add-support-engineer",
-                "url": "https://sb.contoso.com/functions/v1/add-support-engineer/add",
-                "description": "adds an new support engineer to Horsey",
+                "url": "https://sb.contoso.com/functions/v1/modal-handler/add-engineer",
+                "description": "adds an new support engineer to SLA Buddy",
                 "usage_hint": "Just run it without arguments and use the modal",
                 "should_escape": false
-            }
+            }, {
+                "command": "/sla-setup",
+                "url": "https://sb.contoso.com/functions/v1/modal-handler/sla-setup",
+                "description": "setup or edit the configuration for a given channel",
+                "usage_hint": "Just run it without arguments and use the modal",
+                "should_escape": false
+            },
         ]
     },
     "oauth_config": {
@@ -98,7 +104,7 @@ This allows you to set different SLA enforcements on each of them.
         },
         "interactivity": {
             "is_enabled": true,
-            "request_url": "https://sb.contoso.com/functions/v1/add-support-engineer/modal"
+            "request_url": "https://sb.contoso.com/functions/v1/modal-handler/modal"
         },
         "org_deploy_enabled": false,
         "socket_mode_enabled": false,
