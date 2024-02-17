@@ -35,7 +35,7 @@ Here's the top-level diagram explaining how it works:
 ## Installing
 
 ### Get a Supabase Project
- - Setup a Supabase project for the bot [here](database.new)
+ - Setup a Supabase project for the bot [here](https://database.new)
  - Install the [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started#installing-the-supabase-cli)
  - Login to your Supabase instance in the CLI
  - Run the [initial.sql](https://raw.githubusercontent.com/mansueli/slabuddy/main/supabase/migrations/initial.sql) in the database.
