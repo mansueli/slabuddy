@@ -900,6 +900,10 @@ CREATE TABLE IF NOT EXISTS "public"."priority" (
     "message" "text" NOT NULL
 );
 
+ALTER TABLE "public"."priority"
+ADD CONSTRAINT "unique_level_channel"
+UNIQUE ("level", "channel_id");
+
 CREATE TABLE IF NOT EXISTS "public"."slack_channels" (
     "id" bigint NOT NULL,
     "channel" "text",
