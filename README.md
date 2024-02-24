@@ -62,22 +62,23 @@ This allows you to set different SLA enforcements on each of them.
     "features": {
         "bot_user": {
             "display_name": "Sla Buddy",
-            "always_online": true
+            "always_online": false
         },
         "slash_commands": [
             {
                 "command": "/add-support-engineer",
-                "url": "https://sb.contoso.com/functions/v1/modal-handler/add-engineer",
+                "url": "https://supabase.slabuddy.com/functions/v1/modal-handler/add-engineer",
                 "description": "adds an new support engineer to SLA Buddy",
                 "usage_hint": "Just run it without arguments and use the modal",
                 "should_escape": false
-            }, {
+            },
+            {
                 "command": "/sla-setup",
-                "url": "https://sb.contoso.com/functions/v1/modal-handler/sla-setup",
+                "url": "https://supabase.slabuddy.com/functions/v1/modal-handler/sla-setup",
                 "description": "setup or edit the configuration for a given channel",
                 "usage_hint": "Just run it without arguments and use the modal",
                 "should_escape": false
-            },
+            }
         ]
     },
     "oauth_config": {
@@ -89,6 +90,7 @@ This allows you to set different SLA enforcements on each of them.
                 "channels:read",
                 "chat:write",
                 "links:write",
+                "users:read",
                 "commands",
                 "files:write",
                 "chat:write.public"
@@ -97,14 +99,14 @@ This allows you to set different SLA enforcements on each of them.
     },
     "settings": {
         "event_subscriptions": {
-            "request_url": "https://sb.contoso.com/functions/v1/horsey_mentions",
+            "request_url": "https://supabase.slabuddy.com/functions/v1/get-mentions",
             "bot_events": [
                 "app_mention"
             ]
         },
         "interactivity": {
             "is_enabled": true,
-            "request_url": "https://sb.contoso.com/functions/v1/modal-handler/modal"
+            "request_url": "https://supabase.slabuddy.com/functions/v1/modal-handler/modal"
         },
         "org_deploy_enabled": false,
         "socket_mode_enabled": false,
