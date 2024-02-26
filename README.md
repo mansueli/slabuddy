@@ -119,6 +119,26 @@ This allows you to set different SLA enforcements on each of them.
 
 ## Setting the secrets in Vault & Edge Functions:
 
+## FAQs:
+<details>
+
+<summary>Frequentely Asked Questions</summary>
+
+### Can I use this in the Supabase Free plan? 
+
+Yes, on a busy day, you should expect up to around 7500 edge function invocations/day which would sum up to 225k invocations/month in the billing period. 
+The memory might be constrained. If you want to make it more reliable, a Pro Plan + small compute add-on is recommended. This would be 30$/month if you don't use supabase for anything else, but [around 15$/month](https://supabase.com/docs/guides/platform/compute-add-ons) if you already use a pro Supabase org. 
+
+### Why I cannot disable SLA Buddy?  ( it just postpones messages with `@mentions`)
+
+We believe that even if you are unable to answer to a user, you should still be able to give them some information about the next steps. E.g I am escalating this to the responsible team and a human-provided message will enhance the trust of your users. 
+
+### What are the recommendations for setting it up? 
+
+We believe that the trickiest part of a good experience is to nail the first two escalation levels. Since these will be the most widely used, it should be the least intrusive as possible.
+So, you should customize the Edge-Function `post-ticket-escalation` with more personalized tagging ensuring that it fits your team. 
+
+</details>
 
 
 ## Configuration
@@ -126,6 +146,22 @@ This allows you to set different SLA enforcements on each of them.
 - Add Support engineers to the Bot using the `slash` command `/add-support-engineer`
 - Add @SLA Buddy to the channels that receive ticket information
 - Set the escalation levels & messages with `/sla-setup`
+
+## FreshDesk setup:
+<details>
+
+<summary>Instruction guide for setting up with Freshdesk</summary>
+
+
+</details>
+
+## Zendesk setup:
+<details>
+
+<summary>Instruction guide for setting up with Zendesk</summary>
+
+
+</details>
 
 ## License
 This code is licensed under [Apache License 2.0](https://github.com/mansueli/slabuddy/blob/main/LICENSE).
