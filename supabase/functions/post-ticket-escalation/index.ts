@@ -82,6 +82,7 @@ async function post(channel: string, thread_ts: string, message: string): Promis
       channel: channel,
       thread_ts: thread_ts,
       text: message,
+      link_names: true,
     });
     console.info(result);
   } catch (e) {

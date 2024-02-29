@@ -517,20 +517,20 @@ BEGIN
   SELECT decrypted_secret
   INTO api_key
   FROM vault.decrypted_secrets
-  WHERE name = 'revops_anon_key';
+  WHERE name = 'service_role';
   full_bearer := 'Bearer ' || api_key;
 
   SELECT decrypted_secret
   INTO url_address
   FROM vault.decrypted_secrets
-  WHERE name = 'help_plataform_edge_function_url';
+  WHERE name = 'supabase_api_url';
 
   -- Make the HTTP POST request with the given URL, data, and bearer token
   SELECT status::text, content::jsonb
   INTO response
   FROM http((
           'POST',
-           url_address,
+           url_address || "/functions/v1/get-sla-status",
            ARRAY[http_header('Authorization', full_bearer)],
            'application/json',
            coalesce(payload::text, '') -- Set content to an empty string IF post_data is NULL
@@ -565,9 +565,9 @@ BEGIN
     full_bearer := 'Bearer ' || api_key;
     -- Get the edge function URL
     SELECT decrypted_secret
-    INTO edge_function_url
+    INTO supabase_api_url
     FROM vault.decrypted_secrets
-    WHERE name = 'mention_reply_edge_function_url';
+    WHERE name = 'supabase_api_url';
     full_bearer := 'Bearer ' || api_key;
 
     -- Try to INSERT a row into the unlogged table
@@ -581,7 +581,7 @@ BEGIN
     -- If the row was inserted successfully, call the edge function
     IF row_count > 0 THEN
         PERFORM public.http_post_with_auth(
-            url_address := edge_function_url,
+            url_address := supabase_api_url || "/functions/v1/mention-reply",
             bearer := full_bearer,
             payload := _payload
         );
@@ -771,7 +771,7 @@ CREATE OR REPLACE FUNCTION "public"."slack_post_wrapper"("payload" "jsonb") RETU
        SELECT decrypted_secret
        INTO url_address
        FROM vault.decrypted_secrets
-       WHERE name = 'slack_escalation_function_url';
+       WHERE name = 'supabase_api_url';
      
        -- Make the HTTP POST request with the given URL, data, and bearer token
        BEGIN
@@ -779,7 +779,7 @@ CREATE OR REPLACE FUNCTION "public"."slack_post_wrapper"("payload" "jsonb") RETU
          INTO response
          FROM http((
                  'POST',
-                  url_address,
+                  url_address || "/functions/v1/post-ticket-escalation",
                   ARRAY[http_header('Authorization', full_bearer), http_header('Content-Type', 'application/json')],
                   'application/json',
                   coalesce(payload::text, '') -- Set content to an empty string IF post_data is NULL
