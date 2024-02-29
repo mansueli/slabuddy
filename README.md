@@ -14,13 +14,14 @@ This bot started as an internal tooling project to help enforce and meet SLAs at
 
 ## Supported ticketing Platforms¹:
 
-| Currently supported  | Includes Edge Function? | Has setup guide? |
-| -------------------- | ----------------------- |----------------- |
-| Zendesk              | Yes                     | Yes              |
-| Freshdesk            | Yes                     | Yes              |
+| Currently supported  | Includes Edge Function? | Has setup guide?      |
+| -------------------- | ----------------------- |---------------------- |
+| Zendesk              | Yes                     | [Yes](#zendesk-setup) |
+| Freshdesk            | Yes                     | [Yes](#zendesk-setup) |
 
 > [!NOTE]
 > 1. We encourage contributions to include other Help/Support platforms.
+> 2. Platform specific Edge Functions are in this [directory](https://github.com/mansueli/slabuddy/tree/main/supabase/functions/get-sla-status)
 
 ## How it works:
 
@@ -169,6 +170,14 @@ To push notifications to Slack when new tickets are created in Freshdesk, go to 
 
 ### 4. Use the `/sla-setup` slash command to set SLA Buddy to monitor the channel
 
+### 5. Setting the secrets for the Freshdesk Edge Function:
+
+Setting the Freshdesk secrets to be available on Supabase Edge Functions:
+
+Secrets needed:
+
+ - FRESHDESK_DOMAIN
+ - FRESHDESK_API
 
 </details>
 
@@ -227,6 +236,16 @@ You can check [Zendesk placeholders](https://support.zendesk.com/hc/en-us/articl
 ```
 
 ### 4. Use the `/sla-setup` slash command to set SLA Buddy to monitor the channel
+
+### 5. Deploy the secrets for the Edge Function:
+
+Setting the Zendesk secrets to be available on Supabase Edge Functions:
+
+Secrets needed:
+ - ZENDESK_EMAIL
+ - ZENDESK_SUBDOMAIN
+ - ZENDESK_API_TOKEN
+
 
 </details>
 
