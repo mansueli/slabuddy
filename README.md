@@ -129,7 +129,7 @@ It is necessary to set up secrets to get the SLA Buddy working. In this section 
 
 Example:
 ```bash
-service_role: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNsYWJ1ZGR5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY1NDU0MDkxNiwiZXhwIjoxOTcwMTE2OTE2fQ.HEUIAE-pHnvVuJkpS4plXCxZxfnJyXFC5EZwYB7gGOw
+service_role: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNsYWJ1ZGR5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsInlvdSI6ImFyZSBzbmVha3kg8J-kq_CfmYMiLCJpYXQiOjE2NTQ1NDA5MTYsImV4cCI6MTk3MDExNjkxNn0.eGFfzIM05qy6ALGVJ4rCSiadFThqeGfCxCdfK_Zyus0
 supabase_api_url: https://slabuddy.supabase.co
 ```
 
