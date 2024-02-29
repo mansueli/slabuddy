@@ -120,6 +120,27 @@ This allows you to set different SLA enforcements on each of them.
 
 ## Setting the secrets in Vault & Edge Functions:
 
+It is necessary to set up secrets to get the SLA Buddy working. In this section we go over the secrets that need to be set.
+
+Vault Secrets (used within database):
+
+ - service_role
+ - Supabase API URL
+
+Example:
+```bash
+service_role: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNsYWJ1ZGR5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY1NDU0MDkxNiwiZXhwIjoxOTcwMTE2OTE2fQ.HEUIAE-pHnvVuJkpS4plXCxZxfnJyXFC5EZwYB7gGOw
+supabase_api_url: https://slabuddy.supabase.co
+```
+
+Secrets (Edge Functions):
+
+ - SLACK_BOT_TOKEN
+ - SLACK_ORG
+ - GIPHY_API (optional // requires minor tweaking in an edge function to remove this)
+ - Help Platform secrets [depends on the platform detailed instructions below]
+
+```
 ## FAQs:
 <details>
 
