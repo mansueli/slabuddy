@@ -5,12 +5,12 @@
 This bot started as an internal tooling project to help enforce and meet SLAs at [Supabase](https://github.com/supabase/supabase). It borrows many mechanisms and most of the functionality designed in [supa_queue](https://github.com/mansueli/supa_queue) while extending them to be a standalone product.
 
 ## Pre-requisites
- - [<img alt="Supabase logo" src="https://github.com/mansueli/slabuddy/assets/5036432/d0f24eae-acd8-4701-9754-9979ce4448f9" width="12" />]() Supabase
+ - [<img alt="Supabase logo" src="https://github.com/mansueli/slabuddy/assets/5036432/d0f24eae-acd8-4701-9754-9979ce4448f9" width="12" />](https://supabase.com) Supabase
    - pg_cron
    - pg_net
    - Vault
    - Edge Functions
- - [<img alt="SLA-buddy mascot" src="https://github.com/mansueli/slabuddy/assets/5036432/4352ffe6-e61f-43e4-90af-ef97c79eeb86" width="20" />]() Slack API
+ - [<img alt="SLA-buddy mascot" src="https://github.com/mansueli/slabuddy/assets/5036432/4352ffe6-e61f-43e4-90af-ef97c79eeb86" width="20" />](https://api.slack.com/bolt) Slack API
 
 ## Supported ticketing Platforms¹:
 
